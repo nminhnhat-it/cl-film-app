@@ -5,8 +5,11 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('favorite'),
+    return  const CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Favorite')
+      ),
+      child: Text('data')
     );
   }
 }

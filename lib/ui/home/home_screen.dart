@@ -27,7 +27,7 @@ class MovieGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       padding: const EdgeInsets.only(
-        top: 110,
+        top: 115,
         left: 10,
         right: 10,
       ),
@@ -56,7 +56,11 @@ class MovieCard extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.of(context).push(
             CupertinoPageRoute(
-              builder: (BuildContext context) => const WatchScreen(),
+              // builder: (BuildContext context) => const FavoriteScreen()
+              builder: (BuildContext context) => const WatchScreen(
+                videoLink:
+                    'https://s102.imacdn.com/vg/2017/09/11/5781_126831.mp4?hash=QIli4l4gPDZPZmQrP9oFYw&expire=1700000426&title=Rumiko',
+              ),
             ),
           ),
           child: Image.network(
@@ -65,10 +69,13 @@ class MovieCard extends StatelessWidget {
           ),
         ),
         const Flexible(
-          child: Text(
-            'Anime Name',
-            textAlign: TextAlign.left,
-            overflow: TextOverflow.ellipsis,
+          child: Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+              'Movie Name',
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
       ],

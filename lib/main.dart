@@ -13,6 +13,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const CupertinoApp(
       debugShowCheckedModeBanner: false,
+      theme: CupertinoThemeData(brightness: Brightness.light),
+      // theme: CupertinoThemeData(brightness:Brightness.dark),
       home: true ? Screen() : SplashScreen(),
     );
   }
@@ -29,6 +31,10 @@ class Screen extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.search),
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.heart),
@@ -49,6 +55,8 @@ class Screen extends StatelessWidget {
               case 1:
                 return const FavoriteScreen();
               case 2:
+                return const FavoriteScreen();
+              case 3:
                 return const MeScreen();
               default:
                 return const HomeScreen();
