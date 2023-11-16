@@ -59,7 +59,7 @@ class MovieCard extends StatelessWidget {
               // builder: (BuildContext context) => const FavoriteScreen()
               builder: (BuildContext context) => const WatchScreen(
                 videoLink:
-                    'https://s102.imacdn.com/vg/2017/09/11/5781_126831.mp4?hash=QIli4l4gPDZPZmQrP9oFYw&expire=1700000426&title=Rumiko',
+                    'https://s102.imacdn.com/vg/2017/09/11/5781_126832.mp4?hash=jYImSyhcN5sKeylZd7Lkaw&expire=1700000449&title=Rumiko%20Takahashi%20Anthology%20Tập%202%20-%20Thương%20nhân%20lãng%20mạn%20(480p)',
               ),
             ),
           ),

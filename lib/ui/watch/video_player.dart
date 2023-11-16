@@ -23,12 +23,12 @@ class _VideoPlayerState extends State<VideoPlayer> {
       child: BetterPlayer.network(
         widget.videoLink,
         betterPlayerConfiguration: const BetterPlayerConfiguration(
-            fit: BoxFit.contain,
-            autoDispose: true,
-            autoPlay: true,
-            aspectRatio: 16 / 9,
-            fullScreenAspectRatio: 16 / 9,
-            autoDetectFullscreenDeviceOrientation: true),
+          fit: BoxFit.contain,
+          autoDispose: true,
+          autoPlay: true,
+          aspectRatio: 16 / 9,
+          fullScreenAspectRatio: 16 / 9,
+        ),
       ),
     );
   }

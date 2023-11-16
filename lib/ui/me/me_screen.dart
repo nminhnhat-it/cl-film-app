@@ -1,3 +1,6 @@
+import 'package:ct484_project/ui/me/history.dart';
+import 'package:ct484_project/ui/me/settings.dart';
+import 'package:ct484_project/ui/me/account_info_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:ct484_project/ui/screens.dart';
@@ -20,7 +23,7 @@ class MeScreen extends StatelessWidget {
 
   CupertinoListSection optionList(BuildContext context) {
     return CupertinoListSection(
-      children: <CupertinoListTile>[
+      children: [
         accountButton(context),
         settingButton(context),
         historyButton(context),
@@ -35,18 +38,19 @@ class MeScreen extends StatelessWidget {
       title: const Text('Account name'),
       leadingSize: 100,
       padding: const EdgeInsets.all(50),
-      leading: SizedBox(
-        width: 100,
-        height: 100,
-        child: Image.network(
-          'http://localhost:3000/public/uploads/guest.png',
-          fit: BoxFit.contain,
+      leading: ClipOval(
+        child: SizedBox.fromSize(
+          size: const Size.fromRadius(100),
+          child: Image.network(
+            'http://localhost:3000/public/uploads/guest.png',
+            fit: BoxFit.cover,
+          ),
         ),
       ),
       onTap: () => Navigator.of(context).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
-            return const FavoriteScreen();
+            return const AccountInfoScreen();
           },
         ),
       ),
@@ -65,7 +69,7 @@ class MeScreen extends StatelessWidget {
       onTap: () => Navigator.of(context).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
-            return const FavoriteScreen();
+            return const SettingScreen();
           },
         ),
       ),
@@ -84,7 +88,7 @@ class MeScreen extends StatelessWidget {
       onTap: () => Navigator.of(context).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
-            return const FavoriteScreen();
+            return const HistoryScreen();
           },
         ),
       ),
@@ -111,7 +115,6 @@ class MeScreen extends StatelessWidget {
     return CupertinoListTile(
       title: const Text(
         'Log In',
-        textAlign: TextAlign.center,
       ),
       onTap: () => Navigator.of(context).push(
         CupertinoPageRoute<void>(
