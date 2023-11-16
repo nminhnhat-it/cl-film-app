@@ -1,5 +1,5 @@
-import 'package:ct484_project/ui/me/history.dart';
-import 'package:ct484_project/ui/me/settings.dart';
+import 'package:ct484_project/ui/me/history_screen.dart';
+import 'package:ct484_project/ui/me/setting_screen.dart';
 import 'package:ct484_project/ui/me/account_info_screen.dart';
 import 'package:flutter/cupertino.dart';
 

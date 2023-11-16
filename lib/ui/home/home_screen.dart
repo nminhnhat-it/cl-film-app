@@ -30,6 +30,7 @@ class MovieGrid extends StatelessWidget {
         top: 115,
         left: 10,
         right: 10,
+        bottom: 110,
       ),
       itemCount: 100,
       itemBuilder: (context, i) => const MovieCard(),

@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class AccountInfoScreen extends StatefulWidget {
   const AccountInfoScreen({super.key});
@@ -14,7 +18,17 @@ const List<String> _gender = <String>[
 ];
 
 class _AccountInfoScreenState extends State<AccountInfoScreen> {
+  String _editedName = "";
   int _selectedGender = 0;
+  File? _selectedImage;
+
+  Future pickFromGallery() async {
+    final returnImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      _selectedImage = File(returnImage!.path);
+    });
+  }
 
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
@@ -34,8 +48,16 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
     );
   }
 
+  void saveName(value) {
+    setState(() {
+      _editedName = value;
+    });
+  }
+
   void _saveInfo() {
+    print(_editedName);
     print(_selectedGender);
+    print(_selectedImage);
   }
 
   @override
@@ -47,6 +69,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
           padding: const EdgeInsets.all(0),
           onPressed: () {
             _saveInfo();
+            Navigator.of(context).pop();
           },
           child: const Text('Save'),
         ),
@@ -62,9 +85,16 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                   child: ClipOval(
                     child: SizedBox.fromSize(
                       size: const Size.fromRadius(100),
-                      child: Image.network(
-                        'http://localhost:3000/public/uploads/sndyf24n24m.png',
-                        fit: BoxFit.cover,
+                      child: GestureDetector(
+                        onTap: () {
+                          pickFromGallery();
+                        },
+                        child: _selectedImage == null
+                            ? Image.network(
+                                'http://localhost:3000/public/uploads/sndyf24n24m.png',
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(_selectedImage as File),
                       ),
                     ),
                   ),
@@ -77,6 +107,9 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
               backgroundColor: CupertinoColors.white,
               children: [
                 CupertinoTextFormFieldRow(
+                  onChanged: (value) {
+                    saveName(value);
+                  },
                   initialValue: "User Name",
                 ),
               ],
