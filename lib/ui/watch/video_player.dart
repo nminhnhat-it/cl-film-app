@@ -1,5 +1,6 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class VideoPlayer extends StatefulWidget {
   final String videoLink;
@@ -28,6 +29,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
           autoPlay: true,
           aspectRatio: 16 / 9,
           fullScreenAspectRatio: 16 / 9,
+          deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
         ),
       ),
     );

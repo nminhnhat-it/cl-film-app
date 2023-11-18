@@ -104,7 +104,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
             CupertinoFormSection(
               margin: const EdgeInsets.only(left: 30, right: 30),
               header: const Text('Name'),
-              backgroundColor: CupertinoColors.white,
+              backgroundColor: CupertinoColors.systemBackground,
               children: [
                 CupertinoTextFormFieldRow(
                   onChanged: (value) {
@@ -117,15 +117,15 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
             CupertinoFormSection(
               margin: const EdgeInsets.only(left: 30, right: 30),
               header: const Text('Gender'),
-              backgroundColor: CupertinoColors.white,
+              backgroundColor: CupertinoColors.systemBackground,
               children: [
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-                      child: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () => _showDialog(
+                      padding: const EdgeInsets.only(
+                          left: 25.0, right: 25.0, top: 14, bottom: 14),
+                      child: GestureDetector(
+                        onTap: () => _showDialog(
                           CupertinoPicker(
                             magnification: 1,
                             squeeze: 1,
@@ -149,9 +149,6 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                         ),
                         child: Text(
                           _gender[_selectedGender],
-                          style: const TextStyle(
-                            color: CupertinoColors.black,
-                          ),
                         ),
                       ),
                     ),

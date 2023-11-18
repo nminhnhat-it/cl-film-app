@@ -1,5 +1,4 @@
 import 'package:ct484_project/ui/me/history_screen.dart';
-import 'package:ct484_project/ui/me/setting_screen.dart';
 import 'package:ct484_project/ui/me/account_info_screen.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -47,7 +46,7 @@ class MeScreen extends StatelessWidget {
           ),
         ),
       ),
-      onTap: () => Navigator.of(context).push(
+      onTap: () => Navigator.of(context, rootNavigator: true).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
             return const AccountInfoScreen();
@@ -66,7 +65,7 @@ class MeScreen extends StatelessWidget {
         child: Icon(CupertinoIcons.settings),
       ),
       trailing: const CupertinoListTileChevron(),
-      onTap: () => Navigator.of(context).push(
+      onTap: () => Navigator.of(context, rootNavigator: true).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
             return const SettingScreen();
@@ -85,7 +84,7 @@ class MeScreen extends StatelessWidget {
         child: Icon(CupertinoIcons.time),
       ),
       trailing: const CupertinoListTileChevron(),
-      onTap: () => Navigator.of(context).push(
+      onTap: () => Navigator.of(context, rootNavigator: true).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
             return const HistoryScreen();
@@ -101,10 +100,10 @@ class MeScreen extends StatelessWidget {
         'Log Out',
         textAlign: TextAlign.center,
       ),
-      onTap: () => Navigator.of(context).push(
+      onTap: () => Navigator.of(context, rootNavigator: true).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
-            return const FavoriteScreen();
+            return const AuthScreen();
           },
         ),
       ),
@@ -116,10 +115,10 @@ class MeScreen extends StatelessWidget {
       title: const Text(
         'Log In',
       ),
-      onTap: () => Navigator.of(context).push(
+      onTap: () => Navigator.of(context, rootNavigator: true).push(
         CupertinoPageRoute<void>(
           builder: (BuildContext context) {
-            return const FavoriteScreen();
+            return const AuthScreen();
           },
         ),
       ),

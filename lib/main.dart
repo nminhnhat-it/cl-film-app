@@ -1,4 +1,7 @@
+import 'package:ct484_project/ui/favorite/favorite_manager.dart';
+import 'package:ct484_project/ui/home/home_manager.dart';
 import 'package:ct484_project/ui/me/setting_manager.dart';
+import 'package:ct484_project/ui/watch/watch_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +29,15 @@ class App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
               create: (context) => SettingManager(isDarkTheme)),
+          ChangeNotifierProvider(
+            create: (context) => HomeManager(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => WatchManager(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => FavoriteManager(),
+          ),
         ],
         builder: (context, child) {
           final themeData = context.watch<SettingManager>();
@@ -34,7 +46,7 @@ class App extends StatelessWidget {
             theme: !themeData.themeData
                 ? const CupertinoThemeData(brightness: Brightness.light)
                 : const CupertinoThemeData(brightness: Brightness.dark),
-            home: true ? const Screen() : SplashScreen(),
+            home: const Screen(),
           );
         });
   }

@@ -1,9 +1,26 @@
+import 'package:ct484_project/models/movie.dart';
+import 'package:ct484_project/ui/favorite/favorite_manager.dart';
+import 'package:ct484_project/ui/screens.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:ct484_project/ui/screens.dart';
+import 'package:provider/provider.dart';
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
+
+  @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  late Future<void> _fetchFavoriteMovies;
+
+  @override
+  void initState() {
+    _fetchFavoriteMovies =
+        context.read<FavoriteManager>().fetchFavoriteMovies();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,28 +40,31 @@ class FavoriteMovieGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.only(
-        top: 115,
-        left: 10,
-        right: 10,
-      ),
-      itemCount: 100,
-      itemBuilder: (context, i) => const MovieCard(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 2 / 3,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 30,
+    return Consumer<FavoriteManager>(
+      builder: (context, favoriteManager, child) => GridView.builder(
+        padding: const EdgeInsets.only(
+          top: 115,
+          left: 10,
+          right: 10,
+        ),
+        itemCount: favoriteManager.favoriteMovies.length,
+        itemBuilder: (context, i) =>
+            FavoriteMovieCard(favoriteManager.favoriteMovies[i]),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 2 / 3,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 30,
+        ),
       ),
     );
   }
 }
 
 class FavoriteMovieCard extends StatelessWidget {
-  const FavoriteMovieCard({
-    super.key,
-  });
+  final Movie _movie;
+
+  const FavoriteMovieCard(this._movie, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,23 +74,24 @@ class FavoriteMovieCard extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.of(context).push(
             CupertinoPageRoute(
-              // builder: (BuildContext context) => const FavoriteScreen()
-              builder: (BuildContext context) => const WatchScreen(
-                videoLink:
-                    'https://s102.imacdn.com/vg/2017/09/11/5781_126831.mp4?hash=QIli4l4gPDZPZmQrP9oFYw&expire=1700000426&title=Rumiko',
+              builder: (BuildContext context) => WatchScreen(
+                _movie,
+                _movie.episodes,
+                0,
               ),
             ),
           ),
           child: Image.network(
-            'http://localhost:3000/public/uploads/sndyf24n24m.png',
+            'http://localhost:3000/${_movie.mvImage}',
+            height: 170,
             fit: BoxFit.cover,
           ),
         ),
-        const Flexible(
+        Flexible(
           child: Padding(
             padding: EdgeInsets.only(top: 5),
             child: Text(
-              'Movie Name',
+              _movie.mvName,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
             ),

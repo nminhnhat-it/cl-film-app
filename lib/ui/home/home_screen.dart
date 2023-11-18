@@ -1,20 +1,93 @@
+import 'package:ct484_project/models/movie.dart';
+import 'package:ct484_project/ui/home/home_manager.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:ct484_project/ui/screens.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<void> _fetchCategories;
+  late Future<void> _fetchMovies;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories = context.read<HomeManager>().fetchCategories();
+    _fetchMovies = context.read<HomeManager>().fetchMovies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Bliibii TV',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 30,
+                color: Color.fromARGB(255, 51, 161, 204),
+              ),
+            ),
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Container(
+            height: 40,
+            margin: const EdgeInsets.only(
+              top: 100,
+            ),
+            child: const CategorySlideBar(),
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              top: 140,
+              bottom: 80,
+            ),
+            child: const MovieGrid(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CategorySlideBar extends StatelessWidget {
+  const CategorySlideBar({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text('Home'),
-      ),
-      child: Center(
-        child: MovieGrid(),
+    return Consumer<HomeManager>(
+      builder: (context, categoryManager, child) => ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (var category in categoryManager.categories)
+            GestureDetector(
+              onTap: () => {print(category.id)},
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  category.kName,
+                  style: const TextStyle(
+                    color: CupertinoColors.activeBlue,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -25,29 +98,29 @@ class MovieGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.only(
-        top: 115,
-        left: 10,
-        right: 10,
-        bottom: 110,
-      ),
-      itemCount: 100,
-      itemBuilder: (context, i) => const MovieCard(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 2 / 3,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 30,
+    return Consumer<HomeManager>(
+      builder: (context, categoryManager, child) => GridView.builder(
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+        ),
+        itemCount: categoryManager.movies.length,
+        itemBuilder: (context, i) => MovieCard(categoryManager.movies[i]),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 2 / 3,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 30,
+        ),
       ),
     );
   }
 }
 
 class MovieCard extends StatelessWidget {
-  const MovieCard({
-    super.key,
-  });
+  final Movie _movie;
+
+  const MovieCard(this._movie, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,25 +128,26 @@ class MovieCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GestureDetector(
-          onTap: () => Navigator.of(context).push(
+          onTap: () => Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute(
-              // builder: (BuildContext context) => const FavoriteScreen()
-              builder: (BuildContext context) => const WatchScreen(
-                videoLink:
-                    'https://s102.imacdn.com/vg/2017/09/11/5781_126832.mp4?hash=jYImSyhcN5sKeylZd7Lkaw&expire=1700000449&title=Rumiko%20Takahashi%20Anthology%20Tập%202%20-%20Thương%20nhân%20lãng%20mạn%20(480p)',
+              builder: (BuildContext context) => WatchScreen(
+                _movie,
+                _movie.episodes,
+                0,
               ),
             ),
           ),
           child: Image.network(
-            'http://localhost:3000/public/uploads/sndyf24n24m.png',
+            'http://localhost:3000/${_movie.mvImage}',
+            height: 170,
             fit: BoxFit.cover,
           ),
         ),
-        const Flexible(
+        Flexible(
           child: Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: Text(
-              'Movie Name',
+              _movie.mvName,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
             ),
