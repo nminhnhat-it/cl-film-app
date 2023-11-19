@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:ct484_project/models/user.dart';
+import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AccountInfoScreen extends StatefulWidget {
   const AccountInfoScreen({super.key});
@@ -18,8 +20,16 @@ const List<String> _gender = <String>[
 ];
 
 class _AccountInfoScreenState extends State<AccountInfoScreen> {
+  final User _user = User(
+    usName: "",
+    usEmail: "",
+    usPassword: "",
+    usGender: "",
+    usImage: "",
+  );
+
   String _editedName = "";
-  int _selectedGender = 0;
+  int _selectedGender = -1;
   File? _selectedImage;
 
   Future pickFromGallery() async {
@@ -54,109 +64,136 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
     });
   }
 
+  void _showAlertDialog() {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        content: const Text('Updated informations'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _saveInfo() {
-    print(_editedName);
-    print(_selectedGender);
-    print(_selectedImage);
+    if (_editedName != "") _user.usName = _editedName;
+    if (_selectedGender != -1) {
+      _user.usGender = _selectedGender == 0 ? 'male' : 'female';
+    }
+
+    context.read<AuthManager>().updateUserData(_user, _selectedImage);
   }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Account'),
-        trailing: CupertinoButton(
-          padding: const EdgeInsets.all(0),
-          onPressed: () {
-            _saveInfo();
-            Navigator.of(context).pop();
-          },
-          child: const Text('Save'),
+    return Consumer<AuthManager>(
+      builder: (context, authManager, child) => CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: const Text('Account'),
+          trailing: CupertinoButton(
+            padding: const EdgeInsets.all(0),
+            onPressed: () {
+              _saveInfo();
+              Navigator.of(context).pop();
+              _showAlertDialog();
+            },
+            child: const Text('Save'),
+          ),
         ),
-      ),
-      child: Center(
-        child: ListView(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipOval(
-                    child: SizedBox.fromSize(
-                      size: const Size.fromRadius(100),
-                      child: GestureDetector(
-                        onTap: () {
-                          pickFromGallery();
-                        },
-                        child: _selectedImage == null
-                            ? Image.network(
-                                'http://localhost:3000/public/uploads/sndyf24n24m.png',
-                                fit: BoxFit.cover,
-                              )
-                            : Image.file(_selectedImage as File),
+        child: Center(
+          child: ListView(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipOval(
+                      child: SizedBox.fromSize(
+                        size: const Size.fromRadius(100),
+                        child: GestureDetector(
+                          onTap: () {
+                            pickFromGallery();
+                          },
+                          child: _selectedImage == null
+                              ? Image.network(
+                                  'http://localhost:3000/${authManager.user.usImage}',
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(_selectedImage as File),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            CupertinoFormSection(
-              margin: const EdgeInsets.only(left: 30, right: 30),
-              header: const Text('Name'),
-              backgroundColor: CupertinoColors.systemBackground,
-              children: [
-                CupertinoTextFormFieldRow(
-                  onChanged: (value) {
-                    saveName(value);
-                  },
-                  initialValue: "User Name",
-                ),
-              ],
-            ),
-            CupertinoFormSection(
-              margin: const EdgeInsets.only(left: 30, right: 30),
-              header: const Text('Gender'),
-              backgroundColor: CupertinoColors.systemBackground,
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 25.0, right: 25.0, top: 14, bottom: 14),
-                      child: GestureDetector(
-                        onTap: () => _showDialog(
-                          CupertinoPicker(
-                            magnification: 1,
-                            squeeze: 1,
-                            useMagnifier: true,
-                            itemExtent: _kItemExtent,
-                            scrollController: FixedExtentScrollController(
-                              initialItem: _selectedGender,
-                            ),
-                            onSelectedItemChanged: (int selectedItem) {
-                              setState(() {
-                                _selectedGender = selectedItem;
-                              });
-                            },
-                            children: List<Widget>.generate(
-                              _gender.length,
-                              (int index) {
-                                return Text(_gender[index]);
+                ],
+              ),
+              CupertinoFormSection(
+                margin: const EdgeInsets.only(left: 30, right: 30),
+                header: const Text('Name'),
+                backgroundColor: CupertinoColors.systemBackground,
+                children: [
+                  CupertinoTextFormFieldRow(
+                    onChanged: (value) {
+                      saveName(value);
+                    },
+                    initialValue: authManager.user.usName,
+                  ),
+                ],
+              ),
+              CupertinoFormSection(
+                margin: const EdgeInsets.only(left: 30, right: 30),
+                header: const Text('Gender'),
+                backgroundColor: CupertinoColors.systemBackground,
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 25.0, right: 25.0, top: 14, bottom: 14),
+                        child: GestureDetector(
+                          onTap: () => _showDialog(
+                            CupertinoPicker(
+                              magnification: 1,
+                              squeeze: 1,
+                              useMagnifier: true,
+                              itemExtent: _kItemExtent,
+                              scrollController: FixedExtentScrollController(
+                                initialItem:
+                                    authManager.user.usGender == "male" ? 0 : 1,
+                              ),
+                              onSelectedItemChanged: (int selectedItem) {
+                                setState(() {
+                                  _selectedGender = selectedItem;
+                                });
                               },
+                              children: List<Widget>.generate(
+                                _gender.length,
+                                (int index) {
+                                  return Text(_gender[index]);
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                        child: Text(
-                          _gender[_selectedGender],
+                          child: Text(
+                            _selectedGender == -1
+                                ? _gender[
+                                    authManager.user.usGender == "male" ? 0 : 1]
+                                : _gender[_selectedGender],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ],
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

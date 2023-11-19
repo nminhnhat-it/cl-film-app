@@ -1,5 +1,7 @@
+import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:ct484_project/ui/favorite/favorite_manager.dart';
 import 'package:ct484_project/ui/home/home_manager.dart';
+import 'package:ct484_project/ui/me/history_manager.dart';
 import 'package:ct484_project/ui/me/setting_manager.dart';
 import 'package:ct484_project/ui/watch/watch_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +30,11 @@ class App extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
-              create: (context) => SettingManager(isDarkTheme)),
+            create: (context) => AuthManager(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => SettingManager(isDarkTheme),
+          ),
           ChangeNotifierProvider(
             create: (context) => HomeManager(),
           ),
@@ -38,12 +44,16 @@ class App extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => FavoriteManager(),
           ),
+          ChangeNotifierProvider(
+            create: (context) => HistoryManager(),
+          ),
         ],
         builder: (context, child) {
-          final themeData = context.watch<SettingManager>();
+          final settingManager = context.watch<SettingManager>();
+          context.read<AuthManager>().loadToken();
           return CupertinoApp(
             debugShowCheckedModeBanner: false,
-            theme: !themeData.themeData
+            theme: !settingManager.themeData
                 ? const CupertinoThemeData(brightness: Brightness.light)
                 : const CupertinoThemeData(brightness: Brightness.dark),
             home: const Screen(),
@@ -57,45 +67,47 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.heart),
-            label: 'Favorite',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_fill),
-            label: 'Me',
-          ),
-        ],
+    return Consumer<AuthManager>(
+      builder: (context, authManager, child) => CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.search),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.heart),
+              label: 'Favorite',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.person_fill),
+              label: 'Me',
+            ),
+          ],
+        ),
+        tabBuilder: (context, index) {
+          return CupertinoTabView(
+            builder: (context) {
+              switch (index) {
+                case 0:
+                  return const HomeScreen();
+                case 1:
+                  return const SearchScreen();
+                case 2:
+                  return const FavoriteScreen();
+                case 3:
+                  return const MeScreen();
+                default:
+                  return const HomeScreen();
+              }
+            },
+          );
+        },
       ),
-      tabBuilder: (context, index) {
-        return CupertinoTabView(
-          builder: (context) {
-            switch (index) {
-              case 0:
-                return const HomeScreen();
-              case 1:
-                return const SearchScreen();
-              case 2:
-                return const FavoriteScreen();
-              case 3:
-                return const MeScreen();
-              default:
-                return const HomeScreen();
-            }
-          },
-        );
-      },
     );
   }
 }

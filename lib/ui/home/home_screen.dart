@@ -13,14 +13,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<void> _fetchCategories;
-  late Future<void> _fetchMovies;
-
   @override
   void initState() {
     super.initState();
-    _fetchCategories = context.read<HomeManager>().fetchCategories();
-    _fetchMovies = context.read<HomeManager>().fetchMovies();
+    context.read<HomeManager>().fetchCategories();
+    context.read<HomeManager>().fetchMovies();
   }
 
   @override
@@ -133,7 +130,7 @@ class MovieCard extends StatelessWidget {
               builder: (BuildContext context) => WatchScreen(
                 _movie,
                 _movie.episodes,
-                0,
+                1,
               ),
             ),
           ),

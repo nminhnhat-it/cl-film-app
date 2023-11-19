@@ -1,4 +1,5 @@
 import 'package:ct484_project/models/movie.dart';
+import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:ct484_project/ui/favorite/favorite_manager.dart';
 import 'package:ct484_project/ui/screens.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,23 +14,28 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  late Future<void> _fetchFavoriteMovies;
-
   @override
   void initState() {
-    _fetchFavoriteMovies =
-        context.read<FavoriteManager>().fetchFavoriteMovies();
+    context
+        .read<FavoriteManager>()
+        .fetchFavoriteMovies(context.read<AuthManager>().token);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
         middle: Text('Favorite'),
       ),
-      child: Center(
-        child: FavoriteMovieGrid(),
+      child: Consumer2<AuthManager, FavoriteManager>(
+        builder: (context, authManager, favoriteManager, child) => Center(
+          child: authManager.user != null
+              ? favoriteManager.favoriteMovies.length != 0
+                  ? const FavoriteMovieGrid()
+                  : const Text('You don\'t have any favorite movies')
+              : const Text('Sign in to manage your Favorite'),
+        ),
       ),
     );
   }
@@ -72,12 +78,12 @@ class FavoriteMovieCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GestureDetector(
-          onTap: () => Navigator.of(context).push(
+          onTap: () => Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute(
               builder: (BuildContext context) => WatchScreen(
                 _movie,
                 _movie.episodes,
-                0,
+                1,
               ),
             ),
           ),
@@ -89,7 +95,7 @@ class FavoriteMovieCard extends StatelessWidget {
         ),
         Flexible(
           child: Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: Text(
               _movie.mvName,
               textAlign: TextAlign.left,

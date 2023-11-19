@@ -1,57 +1,86 @@
+import 'package:ct484_project/models/movie.dart';
+import 'package:ct484_project/ui/auth/auth_manager.dart';
+import 'package:ct484_project/ui/me/history_manager.dart';
+import 'package:ct484_project/ui/watch/watch_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
   @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  @override
+  void initState() {
+    context
+        .read<HistoryManager>()
+        .fetchHistory(context.read<AuthManager>().token);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('History'),
-      ),
-      child: ListView(
-        children: const [
-          HistoryList(
-              episodes: ['episodes', 'episodes', 'episodes', 'episodes'])
-        ],
+    return Consumer<HistoryManager>(
+      builder: (context, historyManager, child) => CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('History'),
+        ),
+        child: ListView(
+          children: [
+            HistoryList(historyManager.history),
+          ],
+        ),
       ),
     );
   }
 }
 
 class HistoryList extends StatelessWidget {
-  const HistoryList({
-    super.key,
-    required this.episodes,
-  });
+  const HistoryList(this.movies, {super.key});
 
-  final List<String> episodes;
+  final List<Movie> movies;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (var episode in episodes)
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              children: [
-                SizedBox(
-                  child: Image.network(
-                    width: 160,
-                    height: 90,
-                    fit: BoxFit.cover,
-                    'http://localhost:3000/public/uploads/sndyf24n24m.png',
+        for (var movie in movies)
+          GestureDetector(
+            onTap: () => Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute(
+              builder: (BuildContext context) => WatchScreen(
+                movie,
+                movie.episodes,
+                movie.epNumber,
+              ),
+            ),
+          ),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Row(
+                children: [
+                  SizedBox(
+                    child: Image.network(
+                      width: 160,
+                      height: 90,
+                      fit: BoxFit.cover,
+                      'http://localhost:3000/${movie.episodes[movie.epNumber].epImage}',
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    style: const TextStyle(fontSize: 20),
-                    episode,
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        style: const TextStyle(fontSize: 20),
+                        "Ep ${movie.epNumber} - ${movie.episodes[movie.epNumber].epName}",
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
       ],

@@ -1,58 +1,74 @@
+import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:ct484_project/ui/me/history_screen.dart';
 import 'package:ct484_project/ui/me/account_info_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:ct484_project/ui/screens.dart';
+import 'package:provider/provider.dart';
 
 class MeScreen extends StatelessWidget {
   const MeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Me'),
+    return Consumer<AuthManager>(
+      builder: (context, authManager, child) => CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('Me'),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 80),
+          child: CupertinoListSection(
+            children: authManager.user == null
+                ? [
+                    accountButton(context),
+                    settingButton(context),
+                    signInButton(context)
+                  ]
+                : [
+                    accountButton(context),
+                    settingButton(context),
+                    historyButton(context),
+                    logOutButton(context),
+                  ],
+          ),
+        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 80),
-        child: optionList(context),
-      ),
-    );
-  }
-
-  CupertinoListSection optionList(BuildContext context) {
-    return CupertinoListSection(
-      children: [
-        accountButton(context),
-        settingButton(context),
-        historyButton(context),
-        logInButton(context),
-        // logOutButton(context),
-      ],
     );
   }
 
   CupertinoListTile accountButton(BuildContext context) {
     return CupertinoListTile(
-      title: const Text('Account name'),
+      title: context.read<AuthManager>().user == null
+          ? const Text('Guest')
+          : Text(context.read<AuthManager>().user.usName),
       leadingSize: 100,
       padding: const EdgeInsets.all(50),
-      leading: ClipOval(
-        child: SizedBox.fromSize(
-          size: const Size.fromRadius(100),
-          child: Image.network(
-            'http://localhost:3000/public/uploads/guest.png',
-            fit: BoxFit.cover,
+      leading: Consumer<AuthManager>(
+        builder: (context, authManager, child) => ClipOval(
+          child: SizedBox.fromSize(
+            size: const Size.fromRadius(100),
+            child: authManager.user == null
+                ? Image.network(
+                    'http://localhost:3000/public/uploads/guest.png',
+                    fit: BoxFit.cover,
+                  )
+                : Image.network(
+                    'http://localhost:3000/${authManager.user.usImage}',
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
       ),
-      onTap: () => Navigator.of(context, rootNavigator: true).push(
-        CupertinoPageRoute<void>(
-          builder: (BuildContext context) {
-            return const AccountInfoScreen();
-          },
-        ),
-      ),
+      onTap: () => context.read<AuthManager>().user != null
+          ? Navigator.of(context, rootNavigator: true).push(
+              CupertinoPageRoute<void>(
+                builder: (BuildContext context) {
+                  return const AccountInfoScreen();
+                },
+              ),
+            )
+          : () {},
     );
   }
 
@@ -96,24 +112,19 @@ class MeScreen extends StatelessWidget {
 
   CupertinoListTile logOutButton(BuildContext context) {
     return CupertinoListTile(
-      title: const Text(
-        'Log Out',
-        textAlign: TextAlign.center,
-      ),
-      onTap: () => Navigator.of(context, rootNavigator: true).push(
-        CupertinoPageRoute<void>(
-          builder: (BuildContext context) {
-            return const AuthScreen();
-          },
+        title: const Text(
+          'Log Out',
+          textAlign: TextAlign.center,
         ),
-      ),
-    );
+        onTap: () {
+          context.read<AuthManager>().removeToken();
+        });
   }
 
-  CupertinoListTile logInButton(BuildContext context) {
+  CupertinoListTile signInButton(BuildContext context) {
     return CupertinoListTile(
       title: const Text(
-        'Log In',
+        'Sign In',
       ),
       onTap: () => Navigator.of(context, rootNavigator: true).push(
         CupertinoPageRoute<void>(

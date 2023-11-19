@@ -11,8 +11,21 @@ class FavoriteManager with ChangeNotifier {
     return _favoriteMovieItems;
   }
 
-  Future<void> fetchFavoriteMovies() async {
-    _favoriteMovieItems = await _moviesService.fetchFavoriteMovies();
+  set favoriteMovies(newValue) {
+    _favoriteMovieItems = newValue;
     notifyListeners();
+  }
+
+  Future<void> fetchFavoriteMovies(token) async {
+    favoriteMovies = await _moviesService.fetchFavoriteMovies(token);
+  }
+
+  Future<void> addFavorite(token, mvId) async {
+    await _moviesService.addFavorite(token, mvId);
+    fetchFavoriteMovies(token);
+  }
+  Future<void> deleteFavorite(token, mvId) async {
+    await _moviesService.deleteFavorite(token, mvId);
+    fetchFavoriteMovies(token);
   }
 }
