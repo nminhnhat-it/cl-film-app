@@ -3,6 +3,7 @@ import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:ct484_project/ui/me/history_manager.dart';
 import 'package:ct484_project/ui/watch/watch_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         child: ListView(
           children: [
-            HistoryList(historyManager.history),
+              HistoryList(historyManager.history),
           ],
         ),
       ),
@@ -48,16 +49,16 @@ class HistoryList extends StatelessWidget {
     return Column(
       children: [
         for (var movie in movies)
-          GestureDetector(
+           if(movie.episodes.isNotEmpty) GestureDetector(
             onTap: () => Navigator.of(context, rootNavigator: true).push(
-            CupertinoPageRoute(
-              builder: (BuildContext context) => WatchScreen(
-                movie,
-                movie.episodes,
-                movie.epNumber,
+              CupertinoPageRoute(
+                builder: (BuildContext context) => WatchScreen(
+                  movie,
+                  movie.episodes,
+                  movie.epNumber,
+                ),
               ),
             ),
-          ),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Row(
@@ -67,7 +68,7 @@ class HistoryList extends StatelessWidget {
                       width: 160,
                       height: 90,
                       fit: BoxFit.cover,
-                      'http://localhost:3000/${movie.episodes[movie.epNumber].epImage}',
+                      '${dotenv.env['API_HOST']}/${movie.episodes[movie.epNumber-1].epImage}',
                     ),
                   ),
                   Flexible(
@@ -75,7 +76,7 @@ class HistoryList extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         style: const TextStyle(fontSize: 20),
-                        "Ep ${movie.epNumber} - ${movie.episodes[movie.epNumber].epName}",
+                        "Ep ${movie.epNumber} - ${movie.episodes[movie.epNumber-1].epName}",
                       ),
                     ),
                   ),

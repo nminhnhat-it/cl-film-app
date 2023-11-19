@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:ct484_project/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +9,7 @@ class AccountService {
   Future<dynamic> verifyCredential(User data) async {
     final requestBody = data.toJson();
     final response = await http.post(
-      Uri.parse('http://localhost:3000/api/accounts/login'),
+      Uri.parse('${dotenv.env['API_HOST']}/api/accounts/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -26,7 +27,7 @@ class AccountService {
   Future<dynamic> createUser(User data) async {
     final requestBody = data.toJson();
     final response = await http.post(
-      Uri.parse('http://localhost:3000/api/accounts/'),
+      Uri.parse('${dotenv.env['API_HOST']}/api/accounts/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -58,7 +59,7 @@ class AccountService {
 
   Future<dynamic> retrieveUserData(token) async {
     final response = await http.get(
-      Uri.parse('http://localhost:3000/api/accounts/'),
+      Uri.parse('${dotenv.env['API_HOST']}/api/accounts/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'cookie': 'token=$token',
@@ -73,7 +74,7 @@ class AccountService {
 
   Future<void> updateUserData(newUser, file, token, user) async {
     var request = http.MultipartRequest(
-        "PUT", Uri.parse("http://localhost:3000/api/accounts/"));
+        "PUT", Uri.parse("${dotenv.env['API_HOST']}/api/accounts/"));
 
     var headers = {
       'cookie': 'token=$token',

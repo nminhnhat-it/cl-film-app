@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ct484_project/models/user.dart';
 import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -123,7 +124,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                           },
                           child: _selectedImage == null
                               ? Image.network(
-                                  'http://localhost:3000/${authManager.user.usImage}',
+                                  '${dotenv.env['API_HOST']}/${authManager.user.usImage}',
                                   fit: BoxFit.cover,
                                 )
                               : Image.file(_selectedImage as File),

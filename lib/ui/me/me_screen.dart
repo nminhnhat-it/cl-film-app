@@ -4,6 +4,7 @@ import 'package:ct484_project/ui/me/account_info_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:ct484_project/ui/screens.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class MeScreen extends StatelessWidget {
@@ -50,11 +51,11 @@ class MeScreen extends StatelessWidget {
             size: const Size.fromRadius(100),
             child: authManager.user == null
                 ? Image.network(
-                    'http://localhost:3000/public/uploads/guest.png',
+                    '${dotenv.env['API_HOST']}/public/uploads/guest.png',
                     fit: BoxFit.cover,
                   )
                 : Image.network(
-                    'http://localhost:3000/${authManager.user.usImage}',
+                    '${dotenv.env['API_HOST']}/${authManager.user.usImage}',
                     fit: BoxFit.cover,
                   ),
           ),

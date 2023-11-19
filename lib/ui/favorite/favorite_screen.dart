@@ -3,6 +3,7 @@ import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:ct484_project/ui/favorite/favorite_manager.dart';
 import 'package:ct484_project/ui/screens.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:provider/provider.dart';
 
@@ -88,7 +89,7 @@ class FavoriteMovieCard extends StatelessWidget {
             ),
           ),
           child: Image.network(
-            'http://localhost:3000/${_movie.mvImage}',
+            '${dotenv.env['API_HOST']}/${_movie.mvImage}',
             height: 170,
             fit: BoxFit.cover,
           ),

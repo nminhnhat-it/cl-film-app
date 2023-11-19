@@ -6,6 +6,7 @@ import 'package:ct484_project/ui/me/history_manager.dart';
 import 'package:ct484_project/ui/watch/watch_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import './video_player.dart';
@@ -72,7 +73,7 @@ class _WatchScreenState extends State<WatchScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   style: const TextStyle(
-                    fontSize: 22,
+                    fontSize: 17,
                     fontWeight: FontWeight.w600,
                   ),
                   widget._movie.mvName,
@@ -82,7 +83,8 @@ class _WatchScreenState extends State<WatchScreen> {
             const SizedBox(
                 child: Padding(
               padding: EdgeInsets.only(top: 0, bottom: 0, right: 8, left: 8),
-              child: Text('Description:'),
+              child: Text('Description:',
+              style: TextStyle(fontSize: 14),),
             )),
             if (context.read<AuthManager>().user != null)
               SizedBox(
@@ -180,7 +182,7 @@ class _EpisodeListState extends State<EpisodeList> {
                         width: 160,
                         height: 90,
                         fit: BoxFit.cover,
-                        'http://localhost:3000/${episode.epImage}',
+                        '${dotenv.env['API_HOST']}/${episode.epImage}',
                       ),
                     ),
                     Flexible(
@@ -190,12 +192,14 @@ class _EpisodeListState extends State<EpisodeList> {
                           style: episode.epNumber == currentEpisode
                               ? const TextStyle(
                                   color: CupertinoColors.activeBlue,
-                                  fontSize: 20,
+                                  fontSize: 14,
                                 )
                               : const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 14,
                                 ),
                           'Ep ${episode.epNumber} - ${episode.epName}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       ),
                     ),

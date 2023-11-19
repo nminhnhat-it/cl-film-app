@@ -3,6 +3,7 @@ import 'package:ct484_project/ui/home/home_manager.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:ct484_project/ui/screens.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -73,7 +74,7 @@ class CategorySlideBar extends StatelessWidget {
         children: [
           for (var category in categoryManager.categories)
             GestureDetector(
-              onTap: () => {print(category.id)},
+              onTap: () => {},
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
@@ -105,7 +106,7 @@ class MovieGrid extends StatelessWidget {
         itemBuilder: (context, i) => MovieCard(categoryManager.movies[i]),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 2 / 3,
+          childAspectRatio: 2 / 3.8,
           crossAxisSpacing: 10,
           mainAxisSpacing: 30,
         ),
@@ -135,7 +136,7 @@ class MovieCard extends StatelessWidget {
             ),
           ),
           child: Image.network(
-            'http://localhost:3000/${_movie.mvImage}',
+            '${dotenv.env['API_HOST']}/${_movie.mvImage}',
             height: 170,
             fit: BoxFit.cover,
           ),
@@ -145,8 +146,12 @@ class MovieCard extends StatelessWidget {
             padding: const EdgeInsets.only(top: 5),
             child: Text(
               _movie.mvName,
+              style: const TextStyle(
+                fontSize: 13,
+              ),
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
           ),
         ),

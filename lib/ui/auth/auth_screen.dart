@@ -2,6 +2,7 @@ import 'package:ct484_project/ui/auth/auth_manager.dart';
 import 'package:ct484_project/ui/auth/login_form.dart';
 import 'package:ct484_project/ui/auth/register_form.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -29,7 +30,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.network(
-                        'http://localhost:3000/public/uploads/logo-with-brand.png'),
+                        '${dotenv.env['API_HOST']}/public/uploads/logo-with-brand.png'),
                     const LoginForm(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +52,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.network(
-                        'http://localhost:3000/public/uploads/logo-with-brand.png'),
+                        '${dotenv.env['API_HOST']}/public/uploads/logo-with-brand.png'),
                     const RegisterForm(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -5,16 +5,19 @@ import 'package:ct484_project/ui/me/history_manager.dart';
 import 'package:ct484_project/ui/me/setting_manager.dart';
 import 'package:ct484_project/ui/watch/watch_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ct484_project/ui/screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+Future<void> main() async {
+  await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? isDarkTheme = prefs.getBool('isDarkTheme');
-  runApp(App(isDarkTheme!));
+  isDarkTheme ??= false;
+  runApp(App(isDarkTheme));
 }
 
 class App extends StatelessWidget {

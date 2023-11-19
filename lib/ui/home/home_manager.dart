@@ -1,7 +1,7 @@
 import 'package:ct484_project/models/movie.dart';
 import 'package:ct484_project/services/movie_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ct484_project/models/category.dart';
+import 'package:ct484_project/models/categories.dart';
 
 class HomeManager with ChangeNotifier {
   final MoviesService _moviesService = MoviesService();

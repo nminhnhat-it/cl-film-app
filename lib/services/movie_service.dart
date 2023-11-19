@@ -1,7 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:ct484_project/models/category.dart';
+import 'package:ct484_project/models/categories.dart';
 import 'package:ct484_project/models/movie.dart';
 
 class MoviesService {
@@ -9,7 +10,7 @@ class MoviesService {
     final List<Category> categories = [];
 
     final response =
-        await http.get(Uri.parse('http://localhost:3000/api/kinds'));
+        await http.get(Uri.parse('${dotenv.env['API_HOST']}/api/kinds'));
     var data = jsonDecode(response.body.toString());
 
     if (response.statusCode == 200) {
@@ -26,7 +27,7 @@ class MoviesService {
     final List<Movie> movies = [];
 
     final response =
-        await http.get(Uri.parse('http://localhost:3000/api/movies'));
+        await http.get(Uri.parse('${dotenv.env['API_HOST']}/api/movies'));
     var data = jsonDecode(response.body.toString());
 
     if (response.statusCode == 200) {
@@ -42,7 +43,7 @@ class MoviesService {
   Future<List<Movie>> fetchFavoriteMovies(token) async {
     final List<Movie> movies = [];
     final response = await http.get(
-      Uri.parse('http://localhost:3000/api/movies/favorites'),
+      Uri.parse('${dotenv.env['API_HOST']}/api/movies/favorites'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'cookie': 'token=$token',
@@ -63,7 +64,7 @@ class MoviesService {
   Future<List<Movie>> fetchHistory(token) async {
     final List<Movie> movies = [];
     final response = await http.get(
-      Uri.parse('http://localhost:3000/api/movies/histories'),
+      Uri.parse('${dotenv.env['API_HOST']}/api/movies/histories'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'cookie': 'token=$token',
@@ -82,7 +83,7 @@ class MoviesService {
   }
 
   Future<void> addHistory(token, mvId, epNumber) async {
-    await http.post(Uri.parse('http://localhost:3000/api/movies/histories'),
+    await http.post(Uri.parse('${dotenv.env['API_HOST']}/api/movies/histories'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'cookie': 'token=$token',
@@ -91,7 +92,7 @@ class MoviesService {
   }
 
   Future<void> addFavorite(token, mvId) async {
-    await http.post(Uri.parse('http://localhost:3000/api/movies/favorites'),
+    await http.post(Uri.parse('${dotenv.env['API_HOST']}/api/movies/favorites'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'cookie': 'token=$token',
@@ -100,7 +101,8 @@ class MoviesService {
   }
 
   Future<void> deleteFavorite(token, mvId) async {
-    await http.delete(Uri.parse('http://localhost:3000/api/movies/favorites'),
+    await http.delete(
+        Uri.parse('${dotenv.env['API_HOST']}/api/movies/favorites'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'cookie': 'token=$token',
