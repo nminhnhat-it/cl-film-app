@@ -75,8 +75,10 @@ class HistoryList extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        style: const TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 14),
                         "Ep ${movie.epNumber} - ${movie.episodes[movie.epNumber-1].epName}",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
                     ),
                   ),

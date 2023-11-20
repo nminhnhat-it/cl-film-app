@@ -59,7 +59,7 @@ class FavoriteMovieGrid extends StatelessWidget {
             FavoriteMovieCard(favoriteManager.favoriteMovies[i]),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 2 / 3,
+          childAspectRatio: 2 / 3.8,
           crossAxisSpacing: 10,
           mainAxisSpacing: 30,
         ),
@@ -101,6 +101,10 @@ class FavoriteMovieCard extends StatelessWidget {
               _movie.mvName,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+              ),
+              maxLines: 2,
             ),
           ),
         ),

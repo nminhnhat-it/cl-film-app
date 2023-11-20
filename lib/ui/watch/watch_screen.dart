@@ -63,6 +63,7 @@ class _WatchScreenState extends State<WatchScreen> {
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: VideoPlayer(
+                  key: Key(widget._episodes[watchManager.currentEpNumber].epLink),
                   videoLink:
                       widget._episodes[watchManager.currentEpNumber].epLink,
                 ),
@@ -83,8 +84,10 @@ class _WatchScreenState extends State<WatchScreen> {
             const SizedBox(
                 child: Padding(
               padding: EdgeInsets.only(top: 0, bottom: 0, right: 8, left: 8),
-              child: Text('Description:',
-              style: TextStyle(fontSize: 14),),
+              child: Text(
+                'Description:',
+                style: TextStyle(fontSize: 14),
+              ),
             )),
             if (context.read<AuthManager>().user != null)
               SizedBox(
@@ -164,8 +167,8 @@ class _EpisodeListState extends State<EpisodeList> {
           Consumer<WatchManager>(
             builder: (context, watchManager, child) => GestureDetector(
               onTap: () {
-                watchManager.currentEpNumber = episode.epNumber;
                 setState(() {
+                watchManager.currentEpNumber = episode.epNumber;
                   currentEpisode = episode.epNumber;
                   context.read<HistoryManager>().addHistory(
                       context.read<AuthManager>().token,

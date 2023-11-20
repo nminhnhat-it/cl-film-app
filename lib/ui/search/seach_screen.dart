@@ -50,15 +50,20 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           Container(
             height: 50,
-            color: CupertinoColors.secondarySystemBackground,
             padding: const EdgeInsets.all(0),
             margin: const EdgeInsets.only(top: 100),
-            child: CupertinoTextFormFieldRow(
-              prefix: const Icon(CupertinoIcons.search),
-              onChanged: (value) {
-                filterSearch(value);
-              },
-              placeholder: "Enter movie name",
+            child: SizedBox(
+              child: Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: CupertinoColors.activeBlue)),
+                child: CupertinoTextFormFieldRow(
+                  prefix: const Icon(CupertinoIcons.search),
+                  onChanged: (value) {
+                    filterSearch(value);
+                  },
+                  placeholder: "Enter movie name",
+                ),
+              ),
             ),
           ),
         ],
@@ -104,8 +109,10 @@ class SearchList extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        style: const TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 14),
                         movie.mvName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),

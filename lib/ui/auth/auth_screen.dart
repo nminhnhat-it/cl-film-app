@@ -24,52 +24,54 @@ class _AuthScreenState extends State<AuthScreen> {
     return Consumer<AuthManager>(
       builder: (context, authManager, child) => CupertinoPageScaffold(
         navigationBar: const CupertinoNavigationBar(),
-        child: Center(
-          child: !authManager.isRegister
+        child: ListView(
+          children: [
+                  !authManager.isRegister
               ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                        '${dotenv.env['API_HOST']}/public/uploads/logo-with-brand.png'),
-                    const LoginForm(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('New here?'),
-                        CupertinoButton(
-                          onPressed: () {
-                            setState(() {
-                              authManager.isRegister = true;
-                            });
-                          },
-                          child: const Text("Register"),
-                        ),
-                      ],
-                    )
-                  ],
-                )
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                          '${dotenv.env['API_HOST']}/public/uploads/logo-with-brand.png'),
+                      const LoginForm(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('New here?'),
+                          CupertinoButton(
+                            onPressed: () {
+                              setState(() {
+                                authManager.isRegister = true;
+                              });
+                            },
+                            child: const Text("Register"),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
               : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                        '${dotenv.env['API_HOST']}/public/uploads/logo-with-brand.png'),
-                    const RegisterForm(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Already have account?'),
-                        CupertinoButton(
-                          onPressed: () {
-                            setState(() {
-                              authManager.isRegister = false;
-                            });
-                          },
-                          child: const Text("Log In"),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                          '${dotenv.env['API_HOST']}/public/uploads/logo-with-brand.png'),
+                      const RegisterForm(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Already have account?'),
+                          CupertinoButton(
+                            onPressed: () {
+                              setState(() {
+                                authManager.isRegister = false;
+                              });
+                            },
+                            child: const Text("Log In"),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
         ),
       ),
     );
